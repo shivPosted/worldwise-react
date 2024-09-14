@@ -1,5 +1,11 @@
+import Navlink from "../components/Navlink";
 const Product = () => {
-  return <div>product</div>;
+  return (
+    <>
+      <Navlink />
+      <div>Product</div>
+    </>
+  );
 };
 
 export default Product;

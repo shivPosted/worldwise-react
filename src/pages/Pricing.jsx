@@ -1,5 +1,11 @@
+import Navlink from "../components/Navlink";
 const Pricing = () => {
-  return <div>pricing</div>;
+  return (
+    <>
+      <Navlink />
+      <div>Pricing</div>
+    </>
+  );
 };
 
 export default Pricing;

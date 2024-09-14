@@ -1,5 +1,12 @@
+import Navlink from "../components/Navlink";
+
 const Homepage = () => {
-  return <div>Home</div>;
+  return (
+    <>
+      <Navlink />
+      <div>Home</div>
+    </>
+  );
 };
 
 export default Homepage;
