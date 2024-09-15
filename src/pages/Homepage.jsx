@@ -1,9 +1,9 @@
-import Navlink from "../components/Navlink";
+import PageNav from "../components/PageNav";
 
 const Homepage = () => {
   return (
     <>
-      <Navlink />
+      <PageNav />
       <div>Home</div>
     </>
   );

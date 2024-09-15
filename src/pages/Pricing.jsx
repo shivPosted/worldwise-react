@@ -1,8 +1,8 @@
-import Navlink from "../components/Navlink";
+import PageNav from "../components/PageNav";
 const Pricing = () => {
   return (
     <>
-      <Navlink />
+      <PageNav />
       <div>Pricing</div>
     </>
   );

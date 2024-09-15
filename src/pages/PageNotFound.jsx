@@ -1,8 +1,8 @@
-import Navlink from "../components/Navlink";
+import PageNav from "../components/PageNav";
 const PageNotFound = () => {
   return (
     <>
-      <Navlink />
+      <PageNav />
       <div>page not found :(</div>
     </>
   );
