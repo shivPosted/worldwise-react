@@ -1,11 +1,13 @@
 import { useState } from "react";
 import styles from "./Login.module.css";
+import PageNav from "./PageNav";
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState("shiv@example.com");
+  const [password, setPassword] = useState("test123");
 
   return (
     <main className={styles.login}>
+      <PageNav />
       <form className={styles.form}>
         <div className={styles.row}>
           <label htmlFor="email">Email address</label>
