@@ -6,7 +6,7 @@ import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./pages/AppLayout";
 import Login from "./components/Login";
 import ListofCities from "./components/ListofCities";
-import Countries from "./components/Countries";
+import ListofCountries from "./components/ListofCountries";
 import { useEffect, useState } from "react";
 
 const BASE_URL = "http://localhost:9000";
@@ -14,6 +14,7 @@ const BASE_URL = "http://localhost:9000";
 function App() {
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [countries, setCountries] = useState([]);
   useEffect(() => {
     async function fetchCities() {
       try {
@@ -23,6 +24,11 @@ function App() {
 
         const data = await res.json();
         setCities(data);
+
+        const countriesArr = data?.map((item) => {
+          return { country: item.country, emoji: item.emoji, id: item.id };
+        });
+        setCountries(countriesArr);
         console.log(data);
       } catch (err) {
         alert(err.message);
@@ -49,7 +55,10 @@ function App() {
             element={<ListofCities cities={cities} isLoading={isLoading} />}
           />
           <Route path="form" element={<p>Form </p>} />
-          <Route path="countries" element={<Countries />} />
+          <Route
+            path="countries"
+            element={<ListofCountries countries={countries} />}
+          />
         </Route>
         {/* NOTE: * in path is used to define any other urls that are not defined in Routes*/}
         <Route path="*" element={<PageNotFound />} />{" "}
