@@ -14,7 +14,6 @@ const BASE_URL = "http://localhost:9000";
 function App() {
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [countries, setCountries] = useState([]);
   useEffect(() => {
     async function fetchCities() {
       try {
@@ -28,8 +27,6 @@ function App() {
         const countriesArr = data?.map((item) => {
           return { country: item.country, emoji: item.emoji, id: item.id };
         });
-        setCountries(countriesArr);
-        console.log(data);
       } catch (err) {
         alert(err.message);
       } finally {
@@ -57,7 +54,7 @@ function App() {
           <Route path="form" element={<p>Form </p>} />
           <Route
             path="countries"
-            element={<ListofCountries countries={countries} />}
+            element={<ListofCountries cities={cities} />}
           />
         </Route>
         {/* NOTE: * in path is used to define any other urls that are not defined in Routes*/}

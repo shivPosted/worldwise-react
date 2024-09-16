@@ -35,6 +35,18 @@
         "lng": 13.376933665713324
       },
       "id": 98443197
+    },
+    {
+      "cityName": "Jodhpur",
+      "country": "India",
+      "emoji": "IN",
+      "date": "2027-10-31T15:59:59.138Z",
+      "notes": "My favorite city so far!",
+      "position": {
+        "lat": 26.9124,
+        "lng": -9.140900099907554
+      },
+      "id": 84978456
     }
   ]
 }
