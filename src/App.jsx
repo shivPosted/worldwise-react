@@ -5,16 +5,23 @@ import Product from "./pages/Product";
 import PageNotFound from "./pages/PageNotFound";
 import AppLayout from "./pages/AppLayout";
 import Login from "./components/Login";
+import ListofCities from "./components/ListofCities";
+import Countries from "./components/Countries";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         {/* NOTE: / in path is used to define root path in Routes*/}
-        <Route path="/" element={<Homepage />} />{" "}
-        <Route path="pricing" element={<Pricing />} />
-        <Route path="product" element={<Product />} />
-        <Route path="app" element=<AppLayout /> />
+        <Route index element={<Homepage />} />{" "}
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/product" element={<Product />} />
+        <Route path="/app" element={<AppLayout />}>
+          <Route path="cities" element={<ListofCities />} />
+          <Route index element={<ListofCities />} />
+          <Route path="form" element={<p>Form </p>} />
+          <Route path="countries" element={<Countries />} />
+        </Route>
         {/* NOTE: * in path is used to define any other urls that are not defined in Routes*/}
         <Route path="*" element={<PageNotFound />} />{" "}
         <Route path="/login" element={<Login />} />{" "}
