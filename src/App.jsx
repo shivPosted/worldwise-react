@@ -42,7 +42,7 @@ function App() {
         <Route index element={<Homepage />} />{" "}
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/product" element={<Product />} />
-        <Route path="/app" element={<AppLayout />}>
+        <Route path="/app" element={<AppLayout isLoading={isLoading} />}>
           <Route
             path="cities"
             element={<ListofCities cities={cities} isLoading={isLoading} />}
