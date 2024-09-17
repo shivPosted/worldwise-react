@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import ListofCities from "./components/ListofCities";
 import ListofCountries from "./components/ListofCountries";
 import { useEffect, useState } from "react";
+import CityDetailsCard from "./components/CityDetailsCard";
 
 const BASE_URL = "http://localhost:9000";
 
@@ -46,7 +47,9 @@ function App() {
           <Route
             path="cities"
             element={<ListofCities cities={cities} isLoading={isLoading} />}
-          />
+          >
+            <Route path=":id" element={<CityDetailsCard />} />
+          </Route>
           <Route
             index
             element={<ListofCities cities={cities} isLoading={isLoading} />}
