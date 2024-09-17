@@ -47,9 +47,8 @@ function App() {
           <Route
             path="cities"
             element={<ListofCities cities={cities} isLoading={isLoading} />}
-          >
-            <Route path=":id" element={<CityDetailsCard />} />
-          </Route>
+          />
+          <Route path="cities/:id" element={<CityDetailsCard />} />
           <Route
             index
             element={<ListofCities cities={cities} isLoading={isLoading} />}

@@ -2,8 +2,9 @@ import CountryCard from "./CountryCard";
 import styles from "./ListofCountries.module.css";
 
 export default function ListofCountries({ cities }) {
-  console.log(cities);
   const countryObj = cities.reduce((acc, item) => {
+    //NOTE: can result in a bug👇👇
+
     if (acc.map((el) => el.country).includes(item.country)) return acc;
     acc.push({ countryCode: item.countryCode, country: item.country });
     return acc;
