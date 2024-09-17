@@ -5,11 +5,10 @@ export default function ListofCountries({ cities }) {
   console.log(cities);
   const countryObj = cities.reduce((acc, item) => {
     if (acc.map((el) => el.country).includes(item.country)) return acc;
-    acc.push({ city: item.city, country: item.country });
+    acc.push({ countryCode: item.countryCode, country: item.country });
     return acc;
   }, []);
 
-  console.log(countryObj);
   return (
     <ul className={styles.countryList}>
       {countryObj.map((country) => (
