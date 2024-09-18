@@ -9,6 +9,7 @@ import ListofCities from "./components/ListofCities";
 import ListofCountries from "./components/ListofCountries";
 import { useEffect, useState } from "react";
 import CityDetailsCard from "./components/CityDetailsCard";
+import Form from "./components/Form";
 
 const BASE_URL = "http://localhost:9000";
 
@@ -24,10 +25,6 @@ function App() {
 
         const data = await res.json();
         setCities(data);
-
-        const countriesArr = data?.map((item) => {
-          return { country: item.country, emoji: item.emoji, id: item.id };
-        });
       } catch (err) {
         alert(err.message);
       } finally {
@@ -53,7 +50,7 @@ function App() {
             index
             element={<ListofCities cities={cities} isLoading={isLoading} />}
           />
-          <Route path="form" element={<p>Form </p>} />
+          <Route path="form" element={<Form />} />
           <Route
             path="countries"
             element={<ListofCountries cities={cities} />}
