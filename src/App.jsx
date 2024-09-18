@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import Pricing from "./pages/Pricing";
 import Product from "./pages/Product";
@@ -46,10 +46,7 @@ function App() {
             element={<ListofCities cities={cities} isLoading={isLoading} />}
           />
           <Route path="cities/:id" element={<CityDetailsCard />} />
-          <Route
-            index
-            element={<ListofCities cities={cities} isLoading={isLoading} />}
-          />
+          <Route index element={<Navigate to="cities" />} />
           <Route path="form" element={<Form />} />
           <Route
             path="countries"

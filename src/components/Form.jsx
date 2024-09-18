@@ -6,7 +6,7 @@ export default function Form() {
   const navigate = useNavigate();
   return (
     <form
-      action=""
+      action="/none"
       className={styles.form}
       onSubmit={(e) => e.preventDefault()}
     >
