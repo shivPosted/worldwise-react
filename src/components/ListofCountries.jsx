@@ -1,7 +1,9 @@
+import { useCitiesContext } from "./CitiesContext";
 import CountryCard from "./CountryCard";
 import styles from "./ListofCountries.module.css";
 
-export default function ListofCountries({ cities }) {
+export default function ListofCountries() {
+  const { cities } = useCitiesContext();
   const countryObj = cities.reduce((acc, item) => {
     //NOTE: can result in a bug👇👇
 

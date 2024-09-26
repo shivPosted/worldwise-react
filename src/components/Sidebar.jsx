@@ -4,7 +4,9 @@ import Footer from "./Footer";
 import Logo from "./Logo";
 import styles from "./Sidebar.module.css";
 import Spinner from "./Spinner";
-export default function Sidebar({ isLoading }) {
+import { useCitiesContext } from "./CitiesContext";
+export default function Sidebar() {
+  const { isLoading } = useCitiesContext();
   return (
     <div className={styles.sidebar}>
       <Logo />

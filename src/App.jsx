@@ -7,57 +7,32 @@ import AppLayout from "./pages/AppLayout";
 import Login from "./components/Login";
 import ListofCities from "./components/ListofCities";
 import ListofCountries from "./components/ListofCountries";
-import { useEffect, useState } from "react";
 import CityDetailsCard from "./components/CityDetailsCard";
 import Form from "./components/Form";
-
-const BASE_URL = "http://localhost:9000";
+import CitiesContext from "./components/CitiesContext";
 
 function App() {
-  const [cities, setCities] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  useEffect(() => {
-    async function fetchCities() {
-      try {
-        setIsLoading(true);
-        const res = await fetch(`${BASE_URL}/cities`);
-        if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
-
-        const data = await res.json();
-        setCities(data);
-      } catch (err) {
-        alert(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchCities();
-  }, []);
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* NOTE: / in path is used to define root path in Routes*/}
-        <Route index element={<Homepage />} />{" "}
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/app" element={<AppLayout isLoading={isLoading} />}>
-          <Route
-            path="cities"
-            element={<ListofCities cities={cities} isLoading={isLoading} />}
-          />
-          <Route path="cities/:id" element={<CityDetailsCard />} />
-          <Route index element={<Navigate to="cities" />} />
-          <Route path="form" element={<Form />} />
-          <Route
-            path="countries"
-            element={<ListofCountries cities={cities} />}
-          />
-        </Route>
-        {/* NOTE: * in path is used to define any other urls that are not defined in Routes*/}
-        <Route path="*" element={<PageNotFound />} />{" "}
-        <Route path="/login" element={<Login />} />{" "}
-      </Routes>
-    </BrowserRouter>
+    <CitiesContext>
+      <BrowserRouter>
+        <Routes>
+          {/* NOTE: / in path is used to define root path in Routes*/}
+          <Route index element={<Homepage />} />{" "}
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/app" element={<AppLayout />}>
+            <Route path="cities" element={<ListofCities />} />
+            <Route path="cities/:id" element={<CityDetailsCard />} />
+            <Route index element={<Navigate to="cities" />} />
+            <Route path="form" element={<Form />} />
+            <Route path="countries" element={<ListofCountries />} />
+          </Route>
+          {/* NOTE: * in path is used to define any other urls that are not defined in Routes*/}
+          <Route path="*" element={<PageNotFound />} />{" "}
+          <Route path="/login" element={<Login />} />{" "}
+        </Routes>
+      </BrowserRouter>
+    </CitiesContext>
   );
 }
 
