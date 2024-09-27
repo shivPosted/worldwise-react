@@ -4,20 +4,21 @@ import Button from "./Button";
 import { useEffect } from "react";
 import { useCitiesContext } from "./CitiesContext";
 import { dateFormatter } from "./util";
+import Spinner from "./Spinner";
 
 export default function CityDetailsCard() {
   const { id } = useParams();
 
   const navigate = useNavigate();
-  const { currentCity, loadCurrentCity } = useCitiesContext();
+  const { currentCity, loadCurrentCity, isLoading } = useCitiesContext();
 
   useEffect(() => {
     console.log("inside effect");
     loadCurrentCity(id);
-  }, [id, loadCurrentCity]);
+  }, [id]);
 
   const { cityName, countryCode, date, notes } = currentCity;
-
+  if (isLoading) return <Spinner />;
   return (
     <div className={styles.city}>
       <div className={styles.row}>
