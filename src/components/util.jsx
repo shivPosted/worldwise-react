@@ -1,3 +1,4 @@
+const BASE_URL = "http://localhost:9000";
 const dateFormatter = function (date) {
   if (!date) return;
   return new Intl.DateTimeFormat("en", {
@@ -8,4 +9,4 @@ const dateFormatter = function (date) {
   }).format(new Date(date));
 };
 
-export { dateFormatter };
+export { dateFormatter, BASE_URL };

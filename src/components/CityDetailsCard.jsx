@@ -1,27 +1,23 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import styles from "./CityDetailsCard.module.css";
-import { dateFormatter } from "./util";
 import Button from "./Button";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useCitiesContext } from "./CitiesContext";
+import { dateFormatter } from "./util";
 
 export default function CityDetailsCard() {
-  // TEMP DATA
   const { id } = useParams();
 
   const navigate = useNavigate();
-  const [currentCity, setCurrentCity] = useState({});
+  const { currentCity, loadCurrentCity } = useCitiesContext();
 
   useEffect(() => {
-    fetch(`http://localhost:9000/cities/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        const { cityName, countryCode, date, notes } = data;
-        console.log(date);
-        setCurrentCity({ cityName, countryCode, date, notes });
-      });
-  }, [id]);
+    console.log("inside effect");
+    loadCurrentCity(id);
+  }, [id, loadCurrentCity]);
 
   const { cityName, countryCode, date, notes } = currentCity;
+
   return (
     <div className={styles.city}>
       <div className={styles.row}>
