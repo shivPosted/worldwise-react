@@ -23,7 +23,8 @@ function App() {
           <Route path="/app" element={<AppLayout />}>
             <Route path="cities" element={<ListofCities />} />
             <Route path="cities/:id" element={<CityDetailsCard />} />
-            <Route index element={<Navigate to="cities" />} />
+            <Route index element={<Navigate to="cities" />} />{" "}
+            {/* NOTE: Navigate is used to redirect to someplace when a path is opened */}
             <Route path="form" element={<Form />} />
             <Route path="countries" element={<ListofCountries />} />
           </Route>
