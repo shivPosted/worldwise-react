@@ -19,23 +19,23 @@ export default function CityDetailsCard() {
       <div className={styles.row}>
         <h6>City Name</h6>
         <h3>
-          {cityName}
           <span>
             <img
               src={`https://flagcdn.com/24x18/${countryCode}.png`}
               alt={`${countryCode}-image`}
             />
-          </span>
+          </span>{" "}
+          {cityName}
         </h3>
       </div>
       <div className={styles.row}>
         <h6>You went to {cityName} on</h6>
-        <h3>{dateFormatter(date)}</h3>
+        <p>{dateFormatter(date)}</p>
       </div>
       {notes && (
         <div className={styles.row}>
           <h6>Your notes</h6>
-          <h3>{notes}</h3>
+          <p>{notes}</p>
         </div>
       )}
       <div className={styles.row}>
