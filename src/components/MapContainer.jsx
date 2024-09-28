@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useNavigation, useSearchParams } from "react-router-dom";
 import styles from "./MapContainer.module.css";
 
 import {
@@ -8,6 +8,7 @@ import {
   Popup,
   useMap,
   useMapEvent,
+  useMapEvents,
 } from "react-leaflet";
 import { useCitiesContext } from "./CitiesContext";
 import { useEffect, useState } from "react";
@@ -71,13 +72,25 @@ export default function Map() {
           );
         })}
         <CenterMap position={position} />
+        <DetectClick />
       </MapContainer>
     </div>
   );
 }
 
+//NOTE: this is for setting the map position beacause we can't set it just by updating state because of the external library used
 function CenterMap({ position }) {
-  const map = useMap();
+  const map = useMap(); //from leaflet library
   map.setView(position);
   return null;
+}
+
+function DetectClick() {
+  const navigate = useNavigate();
+  //hook from leaflet library in which we can handle events
+  useMapEvents({
+    click: (e) => {
+      navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`); //navigating and storing the lat and lng in url form to use it later
+    },
+  });
 }
