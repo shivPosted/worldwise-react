@@ -67,7 +67,6 @@ export default function Map() {
             countryCode,
             cityName,
           } = city;
-          console.log(lat, lng);
           return (
             <Marker position={[lat, lng]} key={city.id}>
               <Popup>
