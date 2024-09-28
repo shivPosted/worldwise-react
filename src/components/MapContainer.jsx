@@ -12,26 +12,33 @@ import {
 } from "react-leaflet";
 import { useCitiesContext } from "./CitiesContext";
 import { useEffect, useState } from "react";
+import Button from "./Button";
+import { useGeoLocation } from "../assets/hooks/useGeoLocation";
 
 export default function Map() {
-  const { cities } = useCitiesContext();
   const [position, setPosition] = useState([50, 100]);
+  const {
+    isLoading: isPositionLoading,
+    position: currentPosition,
+    getPosition,
+  } = useGeoLocation();
+  const { cities } = useCitiesContext();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const URL_lat = searchParams.get("lat");
   const URL_lng = searchParams.get("lng");
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude: lat, longitude: lng } = pos.coords;
-        setPosition([lat, lng]);
-      },
-      () => {
-        alert("you denied the loaction permission");
-      },
-    );
-  }, []);
+  // useEffect(() => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (pos) => {
+  //       const { latitude: lat, longitude: lng } = pos.coords;
+  //       setPosition([lat, lng]);
+  //     },
+  //     () => {
+  //       alert("you denied the loaction permission");
+  //     },
+  //   );
+  // }, []);
 
   useEffect(() => {
     if (URL_lat && URL_lng) setPosition([URL_lat, URL_lng]);
@@ -39,9 +46,12 @@ export default function Map() {
 
   return (
     <div className={styles.mapContainer}>
+      <Button type="position" onclick={getPosition}>
+        {isPositionLoading ? "Loading..." : "Use My Location"}
+      </Button>
       <MapContainer
         center={position}
-        zoom={13}
+        zoom={7}
         scrollWheelZoom={true}
         className={styles.map}
       >
