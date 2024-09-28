@@ -1,4 +1,4 @@
-import { useNavigate, useNavigation, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./MapContainer.module.css";
 
 import {
@@ -7,13 +7,13 @@ import {
   Marker,
   Popup,
   useMap,
-  useMapEvent,
   useMapEvents,
 } from "react-leaflet";
 import { useCitiesContext } from "./CitiesContext";
 import { useEffect, useState } from "react";
 import Button from "./Button";
-import { useGeoLocation } from "../assets/hooks/useGeoLocation";
+import { useGeoLocation } from "../hooks/useGeoLocation";
+import { useUrlParams } from "../hooks/useUrlParams";
 
 export default function Map() {
   const [position, setPosition] = useState([50, 100]);
@@ -23,10 +23,7 @@ export default function Map() {
     getPosition,
   } = useGeoLocation();
   const { cities } = useCitiesContext();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const URL_lat = searchParams.get("lat");
-  const URL_lng = searchParams.get("lng");
+  const { lat: URL_LAT, lng: URL_LNG } = useUrlParams();
 
   // useEffect(() => {
   //   navigator.geolocation.getCurrentPosition(
@@ -41,8 +38,12 @@ export default function Map() {
   // }, []);
 
   useEffect(() => {
-    if (URL_lat && URL_lng) setPosition([URL_lat, URL_lng]);
-  }, [URL_lat, URL_lng]);
+    if (currentPosition) setPosition(currentPosition);
+  }, [currentPosition]);
+
+  useEffect(() => {
+    if (URL_LAT && URL_LNG) setPosition([URL_LAT, URL_LNG]);
+  }, [URL_LAT, URL_LNG]);
 
   return (
     <div className={styles.mapContainer}>
