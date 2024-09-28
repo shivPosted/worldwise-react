@@ -3,20 +3,33 @@ import styles from "./MapContainer.module.css";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useCitiesContext } from "./CitiesContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Map() {
   const { cities } = useCitiesContext();
-  const [position, setPosition] = useState([]);
+  const [position, setPosition] = useState([50, 100]);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const lat = searchParams.get("lat");
-  const lng = searchParams.get("lng");
+  // const lat = searchParams.get("lat");
+  // const lng = searchParams.get("lng");
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        console.log(pos);
+        setPosition([lat, lng]);
+      },
+      () => {
+        alert("you denied the loaction permission");
+      },
+    );
+  }, []);
 
   return (
     <div className={styles.mapContainer}>
       <MapContainer
-        center={[lat, lng]}
+        center={position}
         zoom={13}
         scrollWheelZoom={true}
         className={styles.map}
