@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./MapContainer.module.css";
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { useCitiesContext } from "./CitiesContext";
 import { useEffect, useState } from "react";
 
@@ -46,7 +46,14 @@ export default function Map() {
             </Popup>
           </Marker>;
         })}
+        <CenterMap position={position} />
       </MapContainer>
     </div>
   );
+}
+
+function CenterMap({ position }) {
+  const map = useMap();
+  map.setView(position);
+  return null;
 }
