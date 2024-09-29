@@ -6,11 +6,16 @@ import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import Message from "./Message";
 
+//datepicker
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 export default function Form() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [displayDate, setDisplayDate] = useState(new Date());
+  const [cityData, setCityData] = useState({ cityName: "", countryCode: "" });
   const navigate = useNavigate();
   const { lat, lng } = useUrlParams();
-  const [cityData, setCityData] = useState({ cityName: "", countryCode: "" });
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     console.log("form effect");
@@ -44,8 +49,10 @@ export default function Form() {
   }, [lat, lng]);
 
   if (isLoading) return <Spinner />;
+
   if (!(lat && lng))
     return <Message message="Start by selecting any city on the map" />;
+
   return (
     <form
       action="/none"
@@ -76,7 +83,16 @@ export default function Form() {
       </div>
       <div className={styles.row}>
         <label htmlFor="date">When did you visited?</label>
-        <input type="text" id="date" value={new Date().toISOString()} />
+        {/* <input type="text" id="date" value={new Date().toISOString()} /> */}
+        <DatePicker
+          id="date"
+          selected={displayDate}
+          onChange={(date) => {
+            setDisplayDate(date);
+          }}
+          locale={navigator.language.split("-").at(0)}
+          dateFormat="dd/MM/YYYY"
+        />
       </div>
       <div className={styles.row}>
         <label htmlFor="date">What are your thoughts about the city</label>
@@ -86,7 +102,13 @@ export default function Form() {
         <Button onclick={() => {}} type="primary">
           Add
         </Button>
-        <Button onclick={() => navigate("/app")} type="back">
+        <Button
+          onclick={(e) => {
+            e.preventDefault();
+            navigate("/app");
+          }}
+          type="back"
+        >
           &larr; back
         </Button>
       </div>
