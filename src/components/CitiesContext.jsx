@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { BASE_URL } from "./util";
+import supabase from "../services/supabase";
 const Context = createContext();
 export default function CitiesContext({ children }) {
   const [cities, setCities] = useState([]);
@@ -23,6 +24,21 @@ export default function CitiesContext({ children }) {
     fetchCities();
   }, []);
 
+  useEffect(() => {
+    console.log("inside supabase effect");
+    async function fetchCities() {
+      try {
+        const { data, error } = await supabase
+          .from("citytable_worldwise_react")
+          .select("*");
+        if (error) throw error;
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchCities();
+  }, []);
   async function loadCurrentCity(id) {
     try {
       setIsLoading(true);

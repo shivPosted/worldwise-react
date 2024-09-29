@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import Message from "./Message";
 
+const REVERSE_API = import.meta.env.VITE_reverse_geocode_api_key;
+
 //datepicker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -14,8 +16,8 @@ export default function Form() {
   const [isLoading, setIsLoading] = useState(false);
   const [displayDate, setDisplayDate] = useState(new Date());
   const [cityData, setCityData] = useState({ cityName: "", countryCode: "" });
-  const navigate = useNavigate();
   const { lat, lng } = useUrlParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("form effect");
@@ -23,7 +25,7 @@ export default function Form() {
       try {
         setIsLoading(true);
         const res = await fetch(
-          `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&apiKey=204cec54c45543bb8119a66423c82d74`,
+          `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&apiKey=${REVERSE_API}`,
         );
         if (!res.ok)
           throw new Error(
@@ -90,13 +92,15 @@ export default function Form() {
           onChange={(date) => {
             setDisplayDate(date);
           }}
-          locale={navigator.language.split("-").at(0)}
+          locale={navigator.language
+            .split("-")
+            .at(0)} /* NOTE: not sure about this */
           dateFormat="dd/MM/YYYY"
         />
       </div>
       <div className={styles.row}>
-        <label htmlFor="date">What are your thoughts about the city</label>
-        <textarea name="comments" id="" />
+        <label htmlFor="notes">What are your thoughts about the city</label>
+        <textarea name="comments" id="notes" />
       </div>
       <div className={styles.buttons}>
         <Button onclick={() => {}} type="primary">
