@@ -4,6 +4,7 @@ import styles from "./Form.module.css";
 import { useUrlParams } from "../hooks/useUrlParams";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
+import Message from "./Message";
 
 export default function Form() {
   const navigate = useNavigate();
@@ -24,10 +25,15 @@ export default function Form() {
             `There was an errro in fetching city data from lat and lng${res.status}:${res.statusText}`,
           );
         const data = await res.json();
-        const { city: cityName, country_code: countryCode } =
-          data.features.at(0).properties;
+        console.log(data);
+        const {
+          city: cityName,
+          country_code: countryCode,
+          name: regionName,
+        } = data.features.at(0).properties;
+
         console.log(cityName, countryCode);
-        setCityData({ cityName, countryCode });
+        setCityData({ cityName: cityName || regionName, countryCode });
       } catch (err) {
         console.error(err.message);
       } finally {
@@ -38,7 +44,8 @@ export default function Form() {
   }, [lat, lng]);
 
   if (isLoading) return <Spinner />;
-
+  if (!(lat && lng))
+    return <Message message="Start by selecting any city on the map" />;
   return (
     <form
       action="/none"
@@ -57,11 +64,15 @@ export default function Form() {
             })
           }
         />
-        <img
-          src={`https://flagcdn.com/24x18/${cityData.countryCode}.png`}
-          alt={`${cityData.countryCode}-image`}
-          className={styles.flag}
-        />
+        {cityData.countryCode ? (
+          <img
+            src={`https://flagcdn.com/24x18/${cityData.countryCode}.png`}
+            alt={`${cityData.countryCode}-image`}
+            className={styles.flag}
+          />
+        ) : (
+          <span className={styles.flag}>🌊</span>
+        )}
       </div>
       <div className={styles.row}>
         <label htmlFor="date">When did you visited?</label>
