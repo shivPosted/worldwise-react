@@ -5,7 +5,12 @@ import { useCitiesContext } from "./CitiesContext";
 
 export default function CityCard({ city }) {
   const { cityName, country, countryCode, date, id, position } = city;
-  const { currentCity } = useCitiesContext();
+  const { currentCity, deleteCity } = useCitiesContext();
+
+  function handleDelete(e) {
+    e.preventDefault();
+    deleteCity(id);
+  }
   return (
     <li>
       <Link
@@ -18,7 +23,9 @@ export default function CityCard({ city }) {
         />
         <h3 className={styles.name}>{cityName}</h3>
         <time className={styles.date}>{dateFormatter(date)}</time>
-        <button className={styles.deleteBtn}>&times;</button>
+        <button className={styles.deleteBtn} onClick={handleDelete}>
+          &times;
+        </button>
       </Link>
     </li>
   );

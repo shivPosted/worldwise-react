@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { BASE_URL } from "./util";
 import supabase from "../services/supabase";
 const Context = createContext();
 export default function CitiesContext({ children }) {
@@ -78,27 +77,41 @@ export default function CitiesContext({ children }) {
 
   async function createNewCity(cityObj) {
     try {
+      setIsLoading(true);
       const { data, error } = await supabase
         .from("citytable_worldwise_react")
         .insert([cityObj])
         .select("*");
       if (error) throw error;
+      setCities((cities) => [...cities, cityObj]);
       console.log(data);
     } catch (error) {
+      alert("there was an error creating new  city");
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  //   async function deleteCity(id)
-  // {
-  //     try{
-  //       const {data, error} = await supabase.from('citytable_worldwise_react').delete
-  //     }
-  //     catch(err)
-  //   {
-  //       console.error(err)
-  //     }
-  //   }
+  async function deleteCity(id) {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("citytable_worldwise_react")
+        .delete()
+        .eq("id", id)
+        .select("*");
+      if (error) throw error;
+      setCities((cities) => {
+        return cities.filter((city) => city.id !== id);
+      });
+    } catch (err) {
+      alert("there was an error deleting the city");
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <Context.Provider
@@ -108,6 +121,7 @@ export default function CitiesContext({ children }) {
         currentCity,
         loadCurrentCity,
         createNewCity,
+        deleteCity,
       }}
     >
       {children}

@@ -1,4 +1,3 @@
-import { Outlet } from "react-router-dom";
 import CityCard from "./CityCard";
 import styles from "./ListofCities.module.css";
 import { useCitiesContext } from "./CitiesContext";

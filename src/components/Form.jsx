@@ -25,7 +25,7 @@ export default function Form() {
   });
   const { lat, lng } = useUrlParams();
   const navigate = useNavigate();
-  const { createNewCity } = useCitiesContext();
+  const { createNewCity, isLoading: isContextLoading } = useCitiesContext();
 
   useEffect(() => {
     console.log("form effect");
@@ -58,7 +58,7 @@ export default function Form() {
     if (lat && lng) fetchCityData();
   }, [lat, lng]);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!cityData.cityName || !displayDate) return;
 
@@ -71,7 +71,7 @@ export default function Form() {
       id: generateId(),
       position: { lat, lng },
     };
-    createNewCity(newCity);
+    await createNewCity(newCity);
     navigate("/app");
   }
 
@@ -86,7 +86,11 @@ export default function Form() {
     );
 
   return (
-    <form action="/none" className={styles.form} onSubmit={handleSubmit}>
+    <form
+      action="/none"
+      className={`${styles.form} ${isContextLoading ? styles.loading : ""}`}
+      onSubmit={handleSubmit}
+    >
       <div className={styles.row}>
         <label htmlFor="cityname">City Name</label>
         <input
