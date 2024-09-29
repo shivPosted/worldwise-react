@@ -11,13 +11,21 @@ const REVERSE_API = import.meta.env.VITE_reverse_geocode_api_key;
 //datepicker
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { generateId } from "./util";
+import { useCitiesContext } from "./CitiesContext";
 
 export default function Form() {
   const [isLoading, setIsLoading] = useState(false);
   const [displayDate, setDisplayDate] = useState(new Date());
-  const [cityData, setCityData] = useState({ cityName: "", countryCode: "" });
+  const [notes, setNotes] = useState("");
+  const [cityData, setCityData] = useState({
+    cityName: "",
+    countryCode: "",
+    country: "",
+  });
   const { lat, lng } = useUrlParams();
   const navigate = useNavigate();
+  const { createNewCity } = useCitiesContext();
 
   useEffect(() => {
     console.log("form effect");
@@ -36,11 +44,11 @@ export default function Form() {
         const {
           city: cityName,
           country_code: countryCode,
-          name: regionName,
+          country,
         } = data.features.at(0).properties;
 
         console.log(cityName, countryCode);
-        setCityData({ cityName: cityName || regionName, countryCode });
+        setCityData({ cityName, countryCode, country });
       } catch (err) {
         console.error(err.message);
       } finally {
@@ -50,17 +58,35 @@ export default function Form() {
     if (lat && lng) fetchCityData();
   }, [lat, lng]);
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!cityData.cityName || !displayDate) return;
+
+    const newCity = {
+      cityName: cityData.cityName,
+      country: cityData.country,
+      countryCode: cityData.countryCode,
+      date: displayDate.toISOString(),
+      notes,
+      id: generateId(),
+      position: { lat, lng },
+    };
+    createNewCity(newCity);
+    navigate("/app");
+  }
+
   if (isLoading) return <Spinner />;
 
   if (!(lat && lng))
     return <Message message="Start by selecting any city on the map" />;
 
+  if (!cityData.cityName)
+    return (
+      <Message message="Looks like that is not a city, select a city to start" />
+    );
+
   return (
-    <form
-      action="/none"
-      className={styles.form}
-      onSubmit={(e) => e.preventDefault()}
-    >
+    <form action="/none" className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.row}>
         <label htmlFor="cityname">City Name</label>
         <input
@@ -90,6 +116,7 @@ export default function Form() {
           id="date"
           selected={displayDate}
           onChange={(date) => {
+            console.log(displayDate);
             setDisplayDate(date);
           }}
           locale={navigator.language
@@ -100,7 +127,12 @@ export default function Form() {
       </div>
       <div className={styles.row}>
         <label htmlFor="notes">What are your thoughts about the city</label>
-        <textarea name="comments" id="notes" />
+        <textarea
+          name="comments"
+          id="notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+        />
       </div>
       <div className={styles.buttons}>
         <Button onclick={() => {}} type="primary">

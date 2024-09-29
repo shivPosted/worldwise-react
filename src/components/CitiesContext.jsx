@@ -76,6 +76,30 @@ export default function CitiesContext({ children }) {
     }
   }
 
+  async function createNewCity(cityObj) {
+    try {
+      const { data, error } = await supabase
+        .from("citytable_worldwise_react")
+        .insert([cityObj])
+        .select("*");
+      if (error) throw error;
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  //   async function deleteCity(id)
+  // {
+  //     try{
+  //       const {data, error} = await supabase.from('citytable_worldwise_react').delete
+  //     }
+  //     catch(err)
+  //   {
+  //       console.error(err)
+  //     }
+  //   }
+
   return (
     <Context.Provider
       value={{
@@ -83,6 +107,7 @@ export default function CitiesContext({ children }) {
         isLoading,
         currentCity,
         loadCurrentCity,
+        createNewCity,
       }}
     >
       {children}

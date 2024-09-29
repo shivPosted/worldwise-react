@@ -8,5 +8,8 @@ const dateFormatter = function (date) {
     day: "2-digit",
   }).format(new Date(date));
 };
+const generateId = () => {
+  return Math.floor(Math.random() * 1000000); // Generates a number between 0 and 999999
+};
 
-export { dateFormatter, BASE_URL };
+export { dateFormatter, BASE_URL, generateId };
