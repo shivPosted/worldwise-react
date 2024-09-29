@@ -26,7 +26,6 @@ export default function CitiesContext({ children }) {
   // }, []);
 
   useEffect(() => {
-    console.log("inside supabase effect");
     async function fetchCities() {
       try {
         setIsLoading(true);
@@ -45,20 +44,38 @@ export default function CitiesContext({ children }) {
     fetchCities();
   }, []);
 
+  // async function loadCurrentCity(id) {
+  //   try {
+  //     setIsLoading(true);
+  //     const res = await fetch(`${BASE_URL}/cities/${id}`);
+  //     if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
+  //     const data = await res.json();
+  //     console.log(data);
+  //     setCurrentCity(data);
+  //   } catch (err) {
+  //     alert(err.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
+
   async function loadCurrentCity(id) {
     try {
       setIsLoading(true);
-      const res = await fetch(`${BASE_URL}/cities/${id}`);
-      if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
-      const data = await res.json();
-      console.log(data);
-      setCurrentCity(data);
+      const { data, error } = await supabase
+        .from("citytable_worldwise_react")
+        .select("*")
+        .eq("id", id);
+      if (error) throw error;
+      const city = data.at(0);
+      setCurrentCity(city);
     } catch (err) {
       alert(err.message);
     } finally {
       setIsLoading(false);
     }
   }
+
   return (
     <Context.Provider
       value={{
