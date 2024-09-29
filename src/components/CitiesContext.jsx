@@ -7,16 +7,37 @@ export default function CitiesContext({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [currentCity, setCurrentCity] = useState({});
 
+  // NOTE: only for testin data with json--server for fake api generation
+  // useEffect(() => {
+  //   async function fetchCities() {
+  //     try {
+  //       setIsLoading(true);
+  //       const res = await fetch(`${BASE_URL}/cities`);
+  //       if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
+  //       const data = await res.json();
+  //       setCities(data);
+  //     } catch (err) {
+  //       alert(err.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
+  //   fetchCities();
+  // }, []);
+
   useEffect(() => {
+    console.log("inside supabase effect");
     async function fetchCities() {
       try {
         setIsLoading(true);
-        const res = await fetch(`${BASE_URL}/cities`);
-        if (!res.ok) throw new Error(`${res.status}: ${res.statusText}`);
-        const data = await res.json();
+        const { data, error } = await supabase
+          .from("citytable_worldwise_react")
+          .select("*");
+        if (error) throw error;
+        console.log(data);
         setCities(data);
-      } catch (err) {
-        alert(err.message);
+      } catch (error) {
+        console.error(error);
       } finally {
         setIsLoading(false);
       }
@@ -24,21 +45,6 @@ export default function CitiesContext({ children }) {
     fetchCities();
   }, []);
 
-  useEffect(() => {
-    console.log("inside supabase effect");
-    async function fetchCities() {
-      try {
-        const { data, error } = await supabase
-          .from("citytable_worldwise_react")
-          .select("*");
-        if (error) throw error;
-        console.log(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchCities();
-  }, []);
   async function loadCurrentCity(id) {
     try {
       setIsLoading(true);
