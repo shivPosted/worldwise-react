@@ -1,14 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Login.module.css";
 import PageNav from "./PageNav";
+import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
+
 export default function Login() {
   const [email, setEmail] = useState("shiv@example.com");
   const [password, setPassword] = useState("test123");
+  const navigate = useNavigate();
+  const { login, isAuthorized } = useAuth();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    login(email, password);
+  }
+
+  useEffect(() => {
+    if (isAuthorized) navigate("/app");
+    console.log("wrong credentials");
+  }, [isAuthorized, navigate]);
 
   return (
     <main className={styles.login}>
       <PageNav />
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <label htmlFor="email">Email address</label>
           <input
