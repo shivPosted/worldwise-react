@@ -22,6 +22,7 @@ export default function Map() {
     position: currentPosition,
     getPosition,
   } = useGeoLocation();
+
   const { cities } = useCitiesContext();
   const { lat: URL_LAT, lng: URL_LNG } = useUrlParams();
 
@@ -52,7 +53,7 @@ export default function Map() {
       </Button>
       <MapContainer
         center={position}
-        zoom={7}
+        zoom={6}
         scrollWheelZoom={true}
         className={styles.map}
       >

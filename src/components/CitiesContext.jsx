@@ -1,11 +1,7 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useReducer,
-  useState,
-} from "react";
-import supabase from "../services/supabase";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
+
+import supabase from "../services/supabase"; //NOTE: importing supabase client from setup in services folder
+
 const Context = createContext();
 
 const initialState = {
@@ -16,32 +12,43 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case "fetchCities":
+    case "error":
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case "cities/loaded":
       console.log(action.payload);
       return {
         ...state,
         cities: action.payload,
+        isLoading: false,
       };
-    case "setLoading":
+    case "loading":
       return {
         ...state,
-        isLoading: action.payload,
+        isLoading: true,
       };
-    case "setCurrentCity":
+    case "city/current":
       return {
         ...state,
         currentCity: action.payload,
+        isLoading: false,
       };
-    case "deleteCity":
+    case "city/deleted":
       return {
         ...state,
         cities: state.cities.filter((city) => city.id !== action.payload),
+        isLoading: false,
       };
-    case "addCity":
+    case "city/added":
       return {
-        ...state,
         cities: [...state.cities, action.payload],
+        isLoading: false,
+        currentCity: action.payload,
       };
+    default:
+      throw new Error("The action type is not mathed for cities reducer");
   }
 }
 
@@ -76,20 +83,20 @@ export default function CitiesContext({ children }) {
     async function fetchCities() {
       try {
         // setIsLoading(true);
-        dispatch({ type: "setLoading", payload: true });
+        dispatch({ type: "loading" });
         const { data, error } = await supabase
           .from("citytable_worldwise_react")
           .select("*");
         if (error) throw error;
         console.log(data);
         // setCities(data);
-        dispatch({ type: "fetchCities", payload: data });
+        dispatch({ type: "cities/loaded", payload: data });
       } catch (error) {
         console.error(error);
-      } finally {
-        dispatch({ type: "setLoading", payload: false });
+        dispatch({ type: "error" });
       }
     }
+
     fetchCities();
   }, []);
 
@@ -109,9 +116,10 @@ export default function CitiesContext({ children }) {
   // }
 
   async function loadCurrentCity(id) {
+    if (currentCity.id === Number(id)) return; //NOTE: as id passed in loadCurrentCity is fetched from params it is a string, we don't want to fetch data from api if same city is clicked again
     try {
       // setIsLoading(true);
-      dispatch({ type: "setLoading", payload: true });
+      dispatch({ type: "loading" });
       const { data, error } = await supabase
         .from("citytable_worldwise_react")
         .select("*")
@@ -119,39 +127,36 @@ export default function CitiesContext({ children }) {
       if (error) throw error;
       const city = data.at(0);
       // setCurrentCity(city);
-      dispatch({ type: "setCurrentCity", payload: city });
+      dispatch({ type: "city/current", payload: city });
     } catch (err) {
       alert(err.message);
-    } finally {
-      dispatch({ type: "setLoading", payload: false });
+      dispatch({ type: "error" });
     }
   }
 
   async function createNewCity(cityObj) {
     try {
       // setIsLoading(true);
-      dispatch({ type: "setLoading", payload: true });
+      dispatch({ type: "loading" });
       const { data, error } = await supabase
         .from("citytable_worldwise_react")
         .insert([cityObj])
         .select("*");
       if (error) throw error;
       // setCities((cities) => [...cities, cityObj]);
-      dispatch({ type: "addCity", payload: cityObj });
+      dispatch({ type: "city/added", payload: cityObj });
       console.log(data);
     } catch (error) {
       alert("there was an error creating new  city");
+      dispatch({ type: "error" });
       console.error(error);
-    } finally {
-      // setIsLoading(false);
-      dispatch({ type: "setLoading", payload: false });
     }
   }
 
   async function deleteCity(id) {
     try {
       // setIsLoading(true);
-      dispatch({ type: "setLoading", payload: true });
+      dispatch({ type: "loading" });
       const { data, error } = await supabase
         .from("citytable_worldwise_react")
         .delete()
@@ -161,13 +166,11 @@ export default function CitiesContext({ children }) {
       // setCities((cities) => {
       //   return cities.filter((city) => city.id !== id);
       // });
-      dispatch({ type: "deleteCity", payload: id });
+      dispatch({ type: "city/deleted", payload: id });
     } catch (err) {
       alert("there was an error deleting the city");
+      dispatch({ type: "error" });
       console.error(err);
-    } finally {
-      // setIsLoading(false);
-      dispatch({ type: "setLoading", payload: false });
     }
   }
 
