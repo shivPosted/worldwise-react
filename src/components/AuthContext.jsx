@@ -36,7 +36,7 @@ function AuthProvider({ children }) {
   const [{ isAuthorized, user }, dispatch] = useReducer(reducer, initialState);
 
   function login(email, password) {
-    console.log(FAKE_USER.password, FAKE_USER.email);
+    console.log(email, password);
     if (email === FAKE_USER.email && password === FAKE_USER.password)
       dispatch({ type: "login", payload: FAKE_USER });
   }

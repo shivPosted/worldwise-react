@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const [email, setEmail] = useState("shiv@example.com");
   const [password, setPassword] = useState("test123");
+
   const navigate = useNavigate();
   const { login, isAuthorized } = useAuth();
 
@@ -17,7 +18,6 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthorized) navigate("/app");
-    console.log("wrong credentials");
   }, [isAuthorized, navigate]);
 
   return (
