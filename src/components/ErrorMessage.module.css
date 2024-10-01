@@ -1,0 +1,13 @@
+.error {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fecaca;
+  color: #f87171;
+  font-size: 1.6rem;
+  max-width: fit-content;
+  padding: 0.6rem 1.2rem;
+  border-radius: 100vw;
+  font-weight: 700;
+}

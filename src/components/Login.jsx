@@ -3,13 +3,15 @@ import styles from "./Login.module.css";
 import PageNav from "./PageNav";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
+import Button from "./Button";
+import ErrorMessage from "./ErrorMessage";
 
 export default function Login() {
   const [email, setEmail] = useState("shiv@example.com");
-  const [password, setPassword] = useState("test123");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { login, isAuthorized } = useAuth();
+  const { login, isAuthorized, isError, errorMessage } = useAuth();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -22,6 +24,7 @@ export default function Login() {
 
   return (
     <main className={styles.login}>
+      {isError && <ErrorMessage message={errorMessage} />}
       <PageNav />
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
@@ -45,7 +48,7 @@ export default function Login() {
         </div>
 
         <div>
-          <button>Login</button>
+          <Button type="primary">Login</Button>
         </div>
       </form>
     </main>

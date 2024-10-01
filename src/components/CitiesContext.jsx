@@ -8,6 +8,8 @@ const initialState = {
   cities: [],
   isLoading: false,
   currentCity: {},
+  isError: false,
+  errorMessage: null,
 };
 
 function reducer(state, action) {
@@ -16,6 +18,8 @@ function reducer(state, action) {
       return {
         ...state,
         isLoading: false,
+        errorMessage: action.payload,
+        isError: true,
       };
     case "cities/loaded":
       console.log(action.payload);
@@ -23,29 +27,39 @@ function reducer(state, action) {
         ...state,
         cities: action.payload,
         isLoading: false,
+        isError: false,
+        errorMessage: null,
       };
     case "loading":
       return {
         ...state,
         isLoading: true,
+        isError: false,
+        errorMessage: null,
       };
     case "city/current":
       return {
         ...state,
         currentCity: action.payload,
         isLoading: false,
+        isError: false,
+        errorMessage: null,
       };
     case "city/deleted":
       return {
         ...state,
         cities: state.cities.filter((city) => city.id !== action.payload),
         isLoading: false,
+        isError: false,
+        errorMessage: null,
       };
     case "city/added":
       return {
         cities: [...state.cities, action.payload],
         isLoading: false,
         currentCity: action.payload,
+        isError: false,
+        errorMessage: null,
       };
     default:
       throw new Error("The action type is not mathed for cities reducer");
@@ -57,10 +71,8 @@ export default function CitiesContext({ children }) {
   // const [isLoading, setIsLoading] = useState(false);
   // const [currentCity, setCurrentCity] = useState({});
 
-  const [{ cities, isLoading, currentCity }, dispatch] = useReducer(
-    reducer,
-    initialState,
-  );
+  const [{ cities, isLoading, currentCity, isError, errorMessage }, dispatch] =
+    useReducer(reducer, initialState);
   // NOTE: only for testin data with json--server for fake api generation
   // useEffect(() => {
   //   async function fetchCities() {
@@ -93,7 +105,7 @@ export default function CitiesContext({ children }) {
         dispatch({ type: "cities/loaded", payload: data });
       } catch (error) {
         console.error(error);
-        dispatch({ type: "error" });
+        dispatch({ type: "error", payload: error.message });
       }
     }
 
@@ -130,7 +142,10 @@ export default function CitiesContext({ children }) {
       dispatch({ type: "city/current", payload: city });
     } catch (err) {
       alert(err.message);
-      dispatch({ type: "error" });
+      dispatch({
+        type: "error",
+        payload: `Can't load country due to: ${err.message}`,
+      });
     }
   }
 
@@ -148,7 +163,10 @@ export default function CitiesContext({ children }) {
       console.log(data);
     } catch (error) {
       alert("there was an error creating new  city");
-      dispatch({ type: "error" });
+      dispatch({
+        type: "error",
+        payload: "there was an error creating new  city",
+      });
       console.error(error);
     }
   }
@@ -169,7 +187,10 @@ export default function CitiesContext({ children }) {
       dispatch({ type: "city/deleted", payload: id });
     } catch (err) {
       alert("there was an error deleting the city");
-      dispatch({ type: "error" });
+      dispatch({
+        type: "error",
+        payload: "there was an error deleting the city",
+      });
       console.error(err);
     }
   }
@@ -183,6 +204,8 @@ export default function CitiesContext({ children }) {
         loadCurrentCity,
         createNewCity,
         deleteCity,
+        isError,
+        errorMessage,
       }}
     >
       {children}

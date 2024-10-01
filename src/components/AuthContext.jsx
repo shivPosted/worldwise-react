@@ -10,6 +10,8 @@ const FAKE_USER = {
 const initialState = {
   isAuthorized: false,
   user: null,
+  isError: null,
+  errorMessage: null,
 };
 
 function reducer(state, action) {
@@ -25,6 +27,20 @@ function reducer(state, action) {
       return {
         ...initialState,
       };
+    case "error":
+      return {
+        ...state,
+        isError: true,
+        errorMessage: action.payload,
+        isAuthorized: false,
+      };
+    case "error/remove":
+      return {
+        ...state,
+        isError: false,
+        errorMessage: null,
+      };
+
     default:
       throw new Error("The action type for reducer in authconext not defined");
   }
@@ -33,16 +49,24 @@ function reducer(state, action) {
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
-  const [{ isAuthorized, user }, dispatch] = useReducer(reducer, initialState);
+  const [{ isAuthorized, user, isError, errorMessage }, dispatch] = useReducer(
+    reducer,
+    initialState,
+  );
 
   function login(email, password) {
     console.log(email, password);
     if (email === FAKE_USER.email && password === FAKE_USER.password)
-      dispatch({ type: "login", payload: FAKE_USER });
+      return dispatch({ type: "login", payload: FAKE_USER });
+
+    dispatch({ type: "error", payload: "Wrong login credentials" });
   }
 
   function logout() {
     dispatch({ type: "logout" });
+  }
+  function handleRemoveError() {
+    dispatch({ type: "error/remove" });
   }
   return (
     <AuthContext.Provider
@@ -51,6 +75,9 @@ function AuthProvider({ children }) {
         logout,
         user,
         isAuthorized,
+        isError,
+        errorMessage,
+        handleRemoveError,
       }}
     >
       {children}
