@@ -21,6 +21,12 @@ function reducer(state, action) {
         errorMessage: action.payload,
         isError: true,
       };
+    case "error/remove":
+      return {
+        ...state,
+        isError: false,
+        errorMessage: null,
+      };
     case "cities/loaded":
       console.log(action.payload);
       return {
@@ -141,7 +147,7 @@ export default function CitiesContext({ children }) {
       // setCurrentCity(city);
       dispatch({ type: "city/current", payload: city });
     } catch (err) {
-      alert(err.message);
+      // alert(err.message);
       dispatch({
         type: "error",
         payload: `Can't load country due to: ${err.message}`,
@@ -162,10 +168,10 @@ export default function CitiesContext({ children }) {
       dispatch({ type: "city/added", payload: cityObj });
       console.log(data);
     } catch (error) {
-      alert("there was an error creating new  city");
+      // alert("there was an error creating new  city");
       dispatch({
         type: "error",
-        payload: "there was an error creating new  city",
+        payload: "There was an error creating new  city",
       });
       console.error(error);
     }
@@ -186,13 +192,17 @@ export default function CitiesContext({ children }) {
       // });
       dispatch({ type: "city/deleted", payload: id });
     } catch (err) {
-      alert("there was an error deleting the city");
+      // alert("there was an error deleting the city");
       dispatch({
         type: "error",
-        payload: "there was an error deleting the city",
+        payload: "There was an error deleting the city",
       });
       console.error(err);
     }
+  }
+
+  function handleRemoveErrorCities() {
+    dispatch({ type: "error/remove" });
   }
 
   return (
@@ -206,6 +216,7 @@ export default function CitiesContext({ children }) {
         deleteCity,
         isError,
         errorMessage,
+        handleRemoveErrorCities,
       }}
     >
       {children}

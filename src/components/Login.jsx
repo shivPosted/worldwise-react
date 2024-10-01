@@ -19,7 +19,7 @@ export default function Login() {
   }
 
   useEffect(() => {
-    if (isAuthorized) navigate("/app");
+    if (isAuthorized) navigate("/app", { replace: true });
   }, [isAuthorized, navigate]);
 
   return (

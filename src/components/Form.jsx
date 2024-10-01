@@ -13,7 +13,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { generateId } from "./util";
 import { useCitiesContext } from "./CitiesContext";
-import ErrorMessage from "./ErrorMessage";
 
 export default function Form() {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,12 +25,7 @@ export default function Form() {
   });
   const { lat, lng } = useUrlParams();
   const navigate = useNavigate();
-  const {
-    createNewCity,
-    isLoading: isContextLoading,
-    isError,
-    errorMessage,
-  } = useCitiesContext();
+  const { createNewCity, isLoading: isContextLoading } = useCitiesContext();
 
   useEffect(() => {
     console.log("form effect");
@@ -90,10 +84,6 @@ export default function Form() {
     return (
       <Message message="Looks like that is not a city, select a city to start" />
     );
-
-  {
-    isError && <ErrorMessage message={errorMessage} />;
-  }
 
   return (
     <form
