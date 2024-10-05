@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styles from "./CityCard.module.css";
 import { dateFormatter } from "./util";
 import { useCitiesContext } from "./CitiesContext";

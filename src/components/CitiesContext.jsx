@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 
 import supabase from "../services/supabase"; //NOTE: importing supabase client from setup in services folder
 
@@ -119,6 +125,7 @@ export default function CitiesContext({ children }) {
   }, []);
 
   // async function loadCurrentCity(id) {
+
   //   try {
   //     setIsLoading(true);
   //     const res = await fetch(`${BASE_URL}/cities/${id}`);
@@ -133,27 +140,31 @@ export default function CitiesContext({ children }) {
   //   }
   // }
 
-  async function loadCurrentCity(id) {
-    if (currentCity.id === Number(id)) return; //NOTE: as id passed in loadCurrentCity is fetched from params it is a string, we don't want to fetch data from api if same city is clicked again
-    try {
-      // setIsLoading(true);
-      dispatch({ type: "loading" });
-      const { data, error } = await supabase
-        .from("citytable_worldwise_react")
-        .select("*")
-        .eq("id", id);
-      if (error) throw error;
-      const city = data.at(0);
-      // setCurrentCity(city);
-      dispatch({ type: "city/current", payload: city });
-    } catch (err) {
-      // alert(err.message);
-      dispatch({
-        type: "error",
-        payload: `Can't load country due to: ${err.message}`,
-      });
-    }
-  }
+  const loadCurrentCity = useCallback(
+    async function loadCurrentCity(id) {
+      //NOTE: using useCallback to solve the inifinite loop bug in citydetailcard component that uses loadCurrentCity in useEffect
+      if (currentCity.id === Number(id)) return; //NOTE: as id passed in loadCurrentCity is fetched from params it is a string, we don't want to fetch data from api if same city is clicked again
+      try {
+        // setIsLoading(true);
+        dispatch({ type: "loading" });
+        const { data, error } = await supabase
+          .from("citytable_worldwise_react")
+          .select("*")
+          .eq("id", id);
+        if (error) throw error;
+        const city = data.at(0);
+        // setCurrentCity(city);
+        dispatch({ type: "city/current", payload: city });
+      } catch (err) {
+        // alert(err.message);
+        dispatch({
+          type: "error",
+          payload: `Can't load country due to: ${err.message}`,
+        });
+      }
+    },
+    [currentCity.id],
+  );
 
   async function createNewCity(cityObj) {
     try {

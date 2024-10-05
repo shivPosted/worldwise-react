@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./CityDetailsCard.module.css";
 import Button from "./Button";
 import { useEffect } from "react";
@@ -13,9 +13,8 @@ export default function CityDetailsCard() {
   const { currentCity, loadCurrentCity, isLoading } = useCitiesContext();
 
   useEffect(() => {
-    console.log("inside effect");
     loadCurrentCity(id);
-  }, [id]);
+  }, [id, loadCurrentCity]);
 
   const { cityName, countryCode, date, notes } = currentCity;
   if (isLoading) return <Spinner />;

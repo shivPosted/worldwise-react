@@ -5,6 +5,7 @@ import Spinner from "./Spinner";
 
 export default function ListofCities() {
   const { cities, isLoading } = useCitiesContext();
+
   if (isLoading) return <Spinner />;
   return (
     <ul className={styles.cityList}>
